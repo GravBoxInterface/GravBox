@@ -25,4 +25,4 @@ class GravBoxApp(App):
         return Controller()
 
 if __name__ == '__main__':
-    SliderApp().run()
+    GravBoxApp().run()
