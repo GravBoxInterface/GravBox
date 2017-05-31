@@ -1,0 +1,82 @@
+<Controller>:
+	NavigationDrawer:
+		id: nav_drawer
+		anim_type: 'fade_in'
+		title: 'Object Menu'
+		BoxLayout:
+			id: obj_menu
+			orientation: 'vertical'
+			Label:
+				text: 'PLEASE SELECT AN OBJECT'
+				font_size: 18
+			Button:
+				text: 'Particle'
+			Button:
+				text: 'Planet'
+			Button:
+				text: 'Comet'
+			Button:
+				text: 'Star'
+			Button:
+				text: 'Black Hole'
+			Button:
+				text: 'Elephant'
+		BoxLayout:
+			id: main_panel
+			orientation: 'horizontal'
+			Widget:
+				canvas:
+					Color:
+						rgb: (255, 255, 255)
+					Rectangle:
+						pos: self.pos
+						size: self.size
+			BoxLayout:
+				orientation: 'vertical'
+				Button:
+					text: 'Object'
+					on_press: root.ids.nav_drawer.toggle_state()
+				BoxLayout:
+					orientation: 'horizontal'
+					Label: 
+						text: "0"
+						font_size: 20
+					Slider:
+						id: angle_slider
+						min: 0
+						max: 360
+						step: .5
+						value: 0
+						on_value: angle.text = "Angle: " + str(self.value)
+					Label: 
+						text: "360"
+						font_size: 20			
+				Label: 
+					id: angle
+					text: "Angle: 0.0"
+					font_size: 24
+				BoxLayout:
+					orientation: 'horizontal'
+					Label: 
+						text: "0"
+						font_size: 20
+					Slider:
+						id: speed_slider
+						min: 0
+						max: 1
+						step: .01
+						value: 0
+						on_value: speed.text = "Speed: " + str(self.value)
+					Label: 
+						text: "1"
+						font_size: 20
+				Label: 
+					id: speed
+					text: "Speed: 0.0"
+					font_size: 
+				Button:
+					id: go_btn
+					text: "GO!"
+					on_press: go_btn.text = "Sent!"
+			
+					
