@@ -66,9 +66,6 @@ class ColorLoopWidget(Widget):
             y_final = touch.y
             Line(points=[x_init,y_init,touch.x,touch.y])
 
-
-
-
 class HueLayout(Widget):
     colorloopwidget = ObjectProperty()
     xlabel = ObjectProperty()
