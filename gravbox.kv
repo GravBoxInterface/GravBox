@@ -24,7 +24,10 @@
 		BoxLayout:
 			id: main_panel
 			orientation: 'horizontal'
+			size_hint: (.75, 1)
 			Widget:
+				size_hint: (1, .75)
+				pos_hint: {'center_y': .5}
 				canvas:
 					Color:
 						rgb: (255, 255, 255)
@@ -33,6 +36,7 @@
 						size: self.size
 			BoxLayout:
 				orientation: 'vertical'
+				size_hint: (.30, 1)
 				Button:
 					text: 'Object'
 					on_press: root.ids.nav_drawer.toggle_state()
