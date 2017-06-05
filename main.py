@@ -7,7 +7,8 @@ from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
-from kivy.graphics import Color, Ellipse, Line
+from kivy.graphics import Color, Ellipse, Line, Triangle, Rectangle
+import numpy as np
 
 Builder.load_file('hueLayout.kv')
 
@@ -24,6 +25,10 @@ class ColorLoopWidget(Widget):
             touch.ud['line'] = Line(points=(touch.x, touch.y))
             self.xlabel.text = 'x: '+str(touch.x)
             self.ylabel.text = 'y: '+str(touch.y)
+            global x_init
+            global y_init
+            x_init = touch.x
+            y_init = touch.y
             
     def on_touch_up(self, touch):
         with self.canvas:
@@ -33,6 +38,33 @@ class ColorLoopWidget(Widget):
             touch.ud['line'] = Line(points=(touch.x, touch.y))
             self.xlabel2.text = 'x: '+str(touch.x)
             self.ylabel2.text = 'y: '+str(touch.y)
+            global x_diff
+            global y_diff
+            x_diff = (touch.x - x_init)
+            print x_diff
+            y_diff = (touch.y - y_init)
+            print y_diff
+            global angle
+            angle = np.arctan2(y_diff,x_diff)*180/np.pi
+            print angle
+
+            Line(points=[x_init,y_init,touch.x,touch.y])
+            
+    def on_touch_move(self,touch):
+        with self.canvas:
+            self.canvas.clear()
+            d = 10
+            Ellipse(pos=(touch.x - d/2, touch.y - d/2), size=(d,d))
+            touch.ud['line'] = Line(points=(touch.x, touch.y))
+            self.xlabel2.text = 'x: '+str(touch.x)
+            self.ylabel2.text = 'y: '+str(touch.y)
+            global x_final
+            global y_final
+            global x_diff
+            global y_diff
+            x_final = touch.x
+            y_final = touch.y
+            Line(points=[x_init,y_init,touch.x,touch.y])
 
 
 
