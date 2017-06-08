@@ -1,86 +1,110 @@
-<Controller>:
-	NavigationDrawer:
-		id: nav_drawer
-		anim_type: 'fade_in'
-		title: 'Object Menu'
+<HueLayout>:
+    colorloopwidget: colorloopwidget
+    xlabel: xlabel
+    ylabel: ylabel
+    xlabel2: xlabel2
+    ylabel2: ylabel2
+	anim_type: 'fade_in'
+	title: 'Object Menu'
+	size: 1000, 500
+	BoxLayout:
+		id: obj_menu
+		orientation: 'vertical'
+		Label:
+			text: 'PLEASE SELECT AN OBJECT'
+			font_size: 18
+		Button:
+			text: 'Particle'
+		Button:
+			text: 'Planet'
+		Button:
+			text: 'Comet'
+		Button:
+			text: 'Star'
+		Button:
+			text: 'Black Hole'
+		Button:
+			text: 'Elephant'
+	BoxLayout:
+		size: 1000, 500
+		orientation: 'horizontal'
+
+		ColorLoopWidget:
+			xlabel: xlabel
+			ylabel: ylabel
+			xlabel2: xlabel2
+			ylabel2: ylabel2
+
+			id: colorloopwidget
+			size: 500, 500
+			canvas:
+				Color:
+					rgb: 1, 0, 0
 		BoxLayout:
-			id: obj_menu
 			orientation: 'vertical'
-			Label:
-				text: 'PLEASE SELECT AN OBJECT'
-				font_size: 18
 			Button:
-				text: 'Particle'
-			Button:
-				text: 'Planet'
-			Button:
-				text: 'Comet'
-			Button:
-				text: 'Star'
-			Button:
-				text: 'Black Hole'
-			Button:
-				text: 'Elephant'
-		BoxLayout:
-			id: main_panel
-			orientation: 'horizontal'
-			size_hint: (.75, 1)
-			Widget:
-				size_hint: (1, .75)
-				pos_hint: {'center_y': .5}
-				canvas:
-					Color:
-						rgb: (255, 255, 255)
-					Rectangle:
-						pos: self.pos
-						size: self.size
+				text: 'Object'
+				on_press: root.toggle_state()
 			BoxLayout:
-				orientation: 'vertical'
-				size_hint: (.30, 1)
-				Button:
-					text: 'Object'
-					on_press: root.ids.nav_drawer.toggle_state()
-				BoxLayout:
-					orientation: 'horizontal'
-					Label: 
-						text: "0"
-						font_size: 20
-					Slider:
-						id: angle_slider
-						min: 0
-						max: 360
-						step: .5
-						value: 0
-						on_value: angle.text = "Angle: " + str(self.value)
-					Label: 
-						text: "360"
-						font_size: 20			
+				orientation: 'horizontal'
 				Label: 
-					id: angle
-					text: "Angle: 0.0"
-					font_size: 24
-				BoxLayout:
-					orientation: 'horizontal'
-					Label: 
-						text: "0"
-						font_size: 20
-					Slider:
-						id: speed_slider
-						min: 0
-						max: 1
-						step: .01
-						value: 0
-						on_value: speed.text = "Speed: " + str(self.value)
-					Label: 
-						text: "1"
-						font_size: 20
+					text: "0"
+					font_size: 20
+				Slider:
+					id: angle_slider
+					min: 0
+					max: 360
+					step: .5
+					value: 0
+					on_value: angle_lbl.text = "Angle: " + str(self.value)
 				Label: 
-					id: speed
-					text: "Speed: 0.0"
-					font_size: 
-				Button:
-					id: go_btn
-					text: "GO!"
-					on_press: go_btn.text = "Sent!"
-			
-					
+					text: "360"
+					font_size: 20			
+			Label: 
+				id: angle_lbl
+				text: "Angle: 0.0"
+				font_size: 24
+			BoxLayout:
+				orientation: 'horizontal'
+				Label: 
+					text: "0"
+					font_size: 20
+				Slider:
+					id: speed_slider
+					min: 0
+					max: 1
+					step: .01
+					value: 0
+					on_value: speed.text = "Speed: " + str(self.value)
+				Label: 
+					text: "1"
+					font_size: 20
+			Label: 
+				id: speed
+				text: "Speed: 0.0"
+			Label: 
+				text: "Vector Positions"
+				font_size: 20
+			Button:
+				text: 'Clear'
+				on_press: root.clear_canvas()
+			Label:
+				id: xlabel
+				text: 'x: '
+				size_hint_y: 0.2
+			Label:
+				id: ylabel
+				text: 'y: '
+				size_hint_y: 0.2
+			Label:
+				id: xlabel2
+				text: 'x2: '
+				size_hint_y: 0.2
+			Label:
+				id: ylabel2
+				text: 'y2: '
+				size_hint_y: 0.2
+			Button:
+				id: go_btn
+				text: "GO!"
+				on_press: go_btn.text = "Sent!"
