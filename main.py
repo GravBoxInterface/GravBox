@@ -27,36 +27,34 @@ class ColorLoopWidget(Widget):
 	angle = NumericProperty(0)
     
 	def on_touch_down(self, touch):
-		if self.collide_point(*touch.pos):
-			with self.canvas:
-				self.canvas.clear()
-				d = 10
-				Ellipse(pos=(touch.x - d/2, touch.y - d/2), size=(d,d))
-				touch.ud['line'] = Line(points=(touch.x, touch.y))
-				self.xlabel.text = 'x: '+str(touch.x)
-				self.ylabel.text = 'y: '+str(touch.y)
-				self.x_init = touch.x
-				self.y_init = touch.y
+		with self.canvas:
+			#self.canvas.clear()
+			d = 10
+			Ellipse(pos=(touch.x - d/2, touch.y - d/2), size=(d,d))
+			touch.ud['line'] = Line(points=(touch.x, touch.y))
+			self.xlabel.text = 'x: '+str(touch.x)
+			self.ylabel.text = 'y: '+str(touch.y)
+			self.x_init = touch.x
+			self.y_init = touch.y
                 
 	def on_touch_up(self, touch):
-		if self.collide_point(*touch.pos):
-			with self.canvas:
-				self.canvas.clear()
-				d = 10
-				Ellipse(pos=(touch.x - d/2, touch.y - d/2), size=(d,d))
-				touch.ud['line'] = Line(points=(touch.x, touch.y))
-				self.xlabel2.text = 'x: '+str(touch.x)
-				self.ylabel2.text = 'y: '+str(touch.y)
-				self.x_diff = (touch.x - self.x_init)
-				self.y_diff = (touch.y - self.y_init)
-				self.angle = float(np.arctan2(self.y_diff,self.x_diff)*180/np.pi)
-				print self.angle
-				
-				Line(points=[self.x_init,self.y_init,touch.x,touch.y])
-            
+		with self.canvas:
+			#self.canvas.clear()
+			d = 10
+			Ellipse(pos=(touch.x - d/2, touch.y - d/2), size=(d,d))
+			touch.ud['line'] = Line(points=(touch.x, touch.y))
+			self.xlabel2.text = 'x: '+str(touch.x)
+			self.ylabel2.text = 'y: '+str(touch.y)
+			self.x_diff = (touch.x - self.x_init)
+			self.y_diff = (touch.y - self.y_init)
+			self.angle = float(np.arctan2(self.y_diff,self.x_diff)*180/np.pi)
+			print self.angle
+			
+			Line(points=[self.x_init,self.y_init,touch.x,touch.y])
+		
 	def on_touch_move(self,touch):
 		with self.canvas:
-			self.canvas.clear()
+			#self.canvas.clear()
 			d = 10
 			Ellipse(pos=(touch.x - d/2, touch.y - d/2), size=(d,d))
 			touch.ud['line'] = Line(points=(touch.x, touch.y))
@@ -66,7 +64,7 @@ class ColorLoopWidget(Widget):
 			self.y_fin = touch.y
 			Line(points=[self.x_init,self.y_init,touch.x,touch.y])
 
-class HueLayout(Widget):
+class HueLayout(NavigationDrawer):
     colorloopwidget = ObjectProperty()
     xlabel = ObjectProperty()
     ylabel = ObjectProperty()
@@ -74,10 +72,12 @@ class HueLayout(Widget):
     ylabel2 = ObjectProperty()
 
 ##    def on_touch_down():
-##        ColorLoopWidget.on_touch_down()
+##	      with self.canvas:
+##            ColorLoopWidget.on_touch_down()
 ##
 ##    def on_touch_move():
-##        ColorLoopWidget.on_touch_move()
+##	      with self.canvas:
+##        	ColorLoopWidget.on_touch_move()
 
     def clear_canvas(self):
         self.colorloopwidget.canvas.clear()
