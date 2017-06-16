@@ -1,0 +1,97 @@
+<HueLayout>:
+    colorloopwidget: colorloopwidget
+    xlabel: xlabel
+    ylabel: ylabel
+    xlabel2: xlabel2
+    ylabel2: ylabel2
+	
+
+	BoxLayout:
+		size: 1000, 500
+		orientation: 'horizontal'
+
+		ColorLoopWidget:
+			xlabel: xlabel
+			ylabel: ylabel
+			xlabel2: xlabel2
+			ylabel2: ylabel2
+
+			id: colorloopwidget
+			canvas:
+				Color:
+					rgb: 1,0,0
+			size: 500, 500
+		BoxLayout:
+			orientation: 'vertical'
+			Button:
+				text: 'Object'
+				#on_press: root.ids.nav_drawer.toggle_state()
+			BoxLayout:
+				orientation: 'horizontal'
+				Label: 
+					text: "0"
+					font_size: 20
+				Slider:
+					id: angle_slider
+					min: 0
+					max: 360
+					step: .5
+					value: 0
+					on_value: angle_lbl.text = "Angle: " + str(self.value)
+				Label: 
+					text: "360"
+					font_size: 20			
+			Label: 
+				id: angle_lbl
+				text: "Angle: 0.0"
+				font_size: 24
+			BoxLayout:
+				orientation: 'horizontal'
+				Label: 
+					text: "0"
+					font_size: 20
+				Slider:
+					id: speed_slider
+					min: 0
+					max: 1
+					step: .01
+					value: 0
+					on_value: speed.text = "Speed: " + str(self.value)
+				Label: 
+					text: "1"
+					font_size: 20
+			Label: 
+				id: speed
+				text: "Speed: 0.0"
+			Label: 
+				text: "Vector Positions"
+				font_size: 20
+			Button:
+				text: 'Clear'
+				on_press: root.clear_canvas()
+			Label:
+				id: xlabel
+				text: 'x: '
+				size_hint_y: 0.2
+			Label:
+				id: ylabel
+				text: 'y: '
+				size_hint_y: 0.2
+			Label:
+				id: xlabel2
+				text: 'x2: '
+				size_hint_y: 0.2
+			Label:
+				id: ylabel2
+				text: 'y2: '
+				size_hint_y: 0.2
+			BoxLayout:
+				orientation: 'horizontal'
+				Button:
+					id: go_btn
+					text: "GO!"
+					on_press: root.save()
+				Button:
+					id: test_btn
+					text: 'Test Orbit'
+					#on_press: root.orbit('test_orbit_circle.csv')
