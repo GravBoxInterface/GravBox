@@ -183,16 +183,27 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
         self.rightlayout.x = Window.width - self.rightlayout.width
         self.rightlayout.y = Window.height/2 - self.rightlayout.height/2
         
-        self.bind(x_initial = DrawingApp.setter(DrawingApp.x_initial)) #attempt to bind numericproperties b/w classes
+        self.leftlayout = FloatLayout()
+        self.leftlayout.width = self.layout.width*0.7
+        self.leftlayout.height = self.layout.height
+        self.leftlayout.x = 0 #Window.width - self.leftlayout.width
+        self.leftlayout.y = 0 #Window.width/2 - self.leftlayout.height/2
+        
+        #self.bind(x_initial = DrawingApp.setter(DrawingApp.x_initial)) #attempt to bind numericproperties b/w classes
+            #trying to bind the x_initial variable to the drawingapp variable called x_initial
         
        
         with self.canvas: #sets canvas instructions for the float layout and draws a red rectangle filling the entire layout
-            Color(1., 0, 0, .1) #RED
+            Color(1., 0, 0, .4) #RED
             Rectangle(pos=(self.layout.x, self.y), size=(self.layout.width, self.layout.height))
         
         with self.rightlayout.canvas: #sets canvas instructions for the rightlayout and draws a blue rect. filling the entire layout
-            Color(0, 0, 1., .4) #BLUE
+            Color(0, 0, 1., .3) #BLUE
             Rectangle(pos=(self.rightlayout.x, self.rightlayout.y), size=(self.rightlayout.width, self.rightlayout.height))
+            
+        with self.leftlayout.canvas:
+            Color(0, 1., 0, .2) #GREEN
+            Rectangle(pos=(self.leftlayout.x, self.leftlayout.y), size=(self.leftlayout.width, self.leftlayout.height))
         
         
         btn2 = Button(text='Back', size_hint=(.1, .1), pos_hint={'left':0, 'top':1}) #back button to the interaction screen
@@ -270,8 +281,9 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
         
         #DRAWING FUNCTIONALITY
         drawUtility = DrawingApp()
-        self.layout.add_widget(drawUtility)                                  
+        self.leftlayout.add_widget(drawUtility)                                  
         self.layout.add_widget(self.rightlayout)
+        self.layout.add_widget(self.leftlayout)
         self.add_widget(self.layout)
         
     def massSelect(self, *args):
@@ -385,7 +397,7 @@ class DrawingApp(Widget):
                 
     def on_touch_up(self, touch):
         with self.canvas:
-            self.canvas.clear()
+            #self.canvas.clear()
             
             if touch.x > self.x_bounds and self.out_of_bounds == False:
                 d = 10
