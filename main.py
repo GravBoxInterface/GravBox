@@ -19,7 +19,6 @@ Config.set('input', 'mouse', 'mouse,multitouch_on_demand') # remove multitouch (
 Window.size = (1280, 800)
 Window.clearcolor = (0, 0, 0, 1.) #fixes drawing issues on some phones
 
-
 class MyButton(Button):
     #uniform button styles class
     def __init__(self, **kwargs):
@@ -256,6 +255,7 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
         self.rightlayout.add_widget(goButton)
         
         #DRAWING FUNCTIONALITY
+	global drawUtility
         drawUtility = DrawingApp()
         self.layout.add_widget(drawUtility)                                  
         self.layout.add_widget(self.rightlayout)
@@ -265,7 +265,8 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
         print('Mass Selector Function called')
         
     def userInput(self, *args):
-        print('UserInput Function Called')
+        with open('algorithm_input.txt', 'w') as f:
+	        f.write('%f\t%f\t%f\t%f\t%f\t%f' % (drawUtility.x_initial, drawUtility.y_initial, drawUtility.x_final, drawUtility.y_final, drawUtility.x_delta, drawUtility.y_delta))
         
     def changer(self, *args):
         self.manager.current = 'screen1'
@@ -282,18 +283,13 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
         
 class DrawingApp(Widget):
     
-    xlabel = ObjectProperty()
-    xlabel2 = ObjectProperty()
-    ylabel = ObjectProperty()
-    ylabel2 = ObjectProperty()
     x_initial = NumericProperty(0)
     y_initial = NumericProperty(0)
     x_final = NumericProperty(0)
     y_final = NumericProperty(0)
     x_delta = NumericProperty(0)
     y_delta = NumericProperty(0)
-    angle = NumericProperty(0)
-    out_of_bounds = None
+    out_of_bounds = ObjectProperty(None)
     
     def __init__(self, **kwargs):
         super(DrawingApp, self).__init__(**kwargs)
@@ -302,7 +298,7 @@ class DrawingApp(Widget):
     def on_touch_down(self, touch):
         with self.canvas:
             self.canvas.clear()
-            if touch.x > 500:
+            if touch.x > 890:
                 self.out_of_bounds = True
                 pass
 	        
@@ -321,7 +317,7 @@ class DrawingApp(Widget):
         with self.canvas:
             self.canvas.clear()
             
-            if touch.x <= 500 and self.out_of_bounds == False:
+            if touch.x <= 890 and self.out_of_bounds == False:
                 d = 10
                 Ellipse(pos=(touch.x - d/2, touch.y - d/2), size=(d,d))
                 touch.ud['line'] = Line(points=(touch.x, touch.y))
@@ -331,37 +327,37 @@ class DrawingApp(Widget):
                 print (self.y_final)
                 Line(points=[self.x_initial, self.y_initial, touch.x, touch.y])
                 
-            elif touch.x > 500 and self.out_of_bounds == False:
+            elif touch.x > 890 and self.out_of_bounds == False:
                 d = 10
-                Ellipse(pos=(500 - d/2, touch.y - d/2), size = (d,d))
+                Ellipse(pos=(890 - d/2, touch.y - d/2), size = (d,d))
                 touch.ud['line'] = Line(points=(touch.x, touch.y))
-                self.x_final = 500
+                self.x_final = 890
                 self.y_final = touch.y
                 print (self.x_final)
                 print (self.y_final)
-                Line(points=[self.x_initial, self.y_initial, 500, touch.y])
+                Line(points=[self.x_initial, self.y_initial, 890, touch.y])
                 
-            elif touch.x > 500 and self.out_of_bounds == True:
+            elif touch.x > 890 and self.out_of_bounds == True:
                 print ('Touch move out of bounds')
                 pass
                 
-            elif touch.x <= 500 and self.out_of_bounds == True:
+            elif touch.x <= 890 and self.out_of_bounds == True:
                 pass
                 
     def on_touch_up(self, touch):
         with self.canvas:
             self.canvas.clear()
             
-            if touch.x > 500 and self.out_of_bounds == False:
+            if touch.x > 890 and self.out_of_bounds == False:
                 d = 10
-                Ellipse(pos=(500 - d/2, touch.y - d/2), size=(d,d))
-                self.x_delta = (500 - self.x_initial)
+                Ellipse(pos=(890 - d/2, touch.y - d/2), size=(d,d))
+                self.x_delta = (890 - self.x_initial)
                 self.y_delta = (touch.y - self.y_initial)
                 print (self.x_delta)
                 print (self.y_delta)
-                Line(points=[self.x_initial, self.y_initial, 500, touch.y])
+                Line(points=[self.x_initial, self.y_initial, 890, touch.y])
                 
-            elif touch.x <= 500 and self.out_of_bounds == False:
+            elif touch.x <= 890 and self.out_of_bounds == False:
                 d = 10
                 Ellipse(pos=(touch.x - d/2, touch.y - d/2), size=(d,d))
                 touch.ud['line'] = Line(points=(touch.x, touch.y))
@@ -371,13 +367,13 @@ class DrawingApp(Widget):
                 print (self.y_delta)
                 Line(points=[self.x_initial, self.y_initial, touch.x, touch.y])
             
-            elif touch.x > 500 and self.out_of_bounds == True:
+            elif touch.x > 890 and self.out_of_bounds == True:
                 print('touch up out of bounds')
                 pass
                 
-            elif touch.x <= 500 and self.out_of_bounds == True:
-                pass
-                      
+            elif touch.x <= 890 and self.out_of_bounds == True:
+                pass           
+      
 class TestApp(App):
     
     def build(self):
