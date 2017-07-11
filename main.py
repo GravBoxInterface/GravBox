@@ -21,10 +21,10 @@ Window.clearcolor = (0, 0, 0, 1.) #fixes drawing issues on some phones
 
 class MyButton(Button):
     #uniform button styles class
+
     def __init__(self, **kwargs):
         super(MyButton, self).__init__(**kwargs)
         self.font_size = Window.width*0.015 #setting font size
-
 
 class WelcomeScreen(Screen):
     
@@ -169,8 +169,7 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
         self.rightlayout.width = self.layout.width*.3
         self.rightlayout.height = self.layout.height
         self.rightlayout.x = Window.width - self.rightlayout.width
-        self.rightlayout.y = Window.height/2 - self.rightlayout.height/2
-        
+        self.rightlayout.y = Window.height/2 - self.rightlayout.height/2        
        
         with self.canvas: #sets canvas instructions for the float layout and draws a red rectangle filling the entire layout
             Color(1., 0, 0, .1) #RED
@@ -178,8 +177,7 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
         
         with self.rightlayout.canvas: #sets canvas instructions for the rightlayout and draws a blue rect. filling the entire layout
             Color(0, 0, 1., .4) #BLUE
-            Rectangle(pos=(self.rightlayout.x, self.rightlayout.y), size=(self.rightlayout.width, self.rightlayout.height))
-        
+            Rectangle(pos=(self.rightlayout.x, self.rightlayout.y), size=(self.rightlayout.width, self.rightlayout.height))        
         
         btn2 = Button(text='Back', size_hint=(.1, .1), pos_hint={'left':0, 'top':1}) #back button to the interaction screen
         btn2.bind(on_press=self.changer) #binds this button to change the screen back to the welcome screen
@@ -266,7 +264,7 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
         
     def userInput(self, *args):
         with open('algorithm_input.txt', 'w') as f:
-	        f.write('%f\t%f\t%f\t%f\t%f\t%f' % (drawUtility.x_initial, drawUtility.y_initial, drawUtility.x_final, drawUtility.y_final, drawUtility.x_delta, drawUtility.y_delta))
+	        f.write('%f\t%f\t%f\t%f' % (drawUtility.x_initial, drawUtility.y_initial, drawUtility.x_final, drawUtility.y_final))
         
     def changer(self, *args):
         self.manager.current = 'screen1'
@@ -287,8 +285,6 @@ class DrawingApp(Widget):
     y_initial = NumericProperty(0)
     x_final = NumericProperty(0)
     y_final = NumericProperty(0)
-    x_delta = NumericProperty(0)
-    y_delta = NumericProperty(0)
     out_of_bounds = ObjectProperty(None)
     
     def __init__(self, **kwargs):
@@ -297,44 +293,40 @@ class DrawingApp(Widget):
     #User Touch Events
     def on_touch_down(self, touch):
         with self.canvas:
-            self.canvas.clear()
             if touch.x > 890:
                 self.out_of_bounds = True
+                print ("Touch down out of bounds")
                 pass
 	        
             else:
+		self.canvas.clear()
+		self.out_of_bounds = False
                 d = 10
                 Ellipse(pos=(touch.x - d/2, touch.y - d/2), size=(d,d))
                 touch.ud['line'] = Line(points=(touch.x, touch.y))
                 self.x_initial = touch.x
-                print (self.x_initial)
-                self.y_initial = touch.y
-                print (self.y_initial)				
-                self.out_of_bounds = False
-                print ("Touch down out of bounds")
+                self.y_initial = touch.y			
+
                 
     def on_touch_move(self, touch):
         with self.canvas:
-            self.canvas.clear()
             
             if touch.x <= 890 and self.out_of_bounds == False:
+		self.canvas.clear()
                 d = 10
                 Ellipse(pos=(touch.x - d/2, touch.y - d/2), size=(d,d))
                 touch.ud['line'] = Line(points=(touch.x, touch.y))
                 self.x_final = touch.x
                 self.y_final = touch.y
-                print (self.x_final)
-                print (self.y_final)
                 Line(points=[self.x_initial, self.y_initial, touch.x, touch.y])
                 
             elif touch.x > 890 and self.out_of_bounds == False:
+                self.canvas.clear()
                 d = 10
                 Ellipse(pos=(890 - d/2, touch.y - d/2), size = (d,d))
                 touch.ud['line'] = Line(points=(touch.x, touch.y))
                 self.x_final = 890
                 self.y_final = touch.y
-                print (self.x_final)
-                print (self.y_final)
                 Line(points=[self.x_initial, self.y_initial, 890, touch.y])
                 
             elif touch.x > 890 and self.out_of_bounds == True:
@@ -346,33 +338,16 @@ class DrawingApp(Widget):
                 
     def on_touch_up(self, touch):
         with self.canvas:
-            self.canvas.clear()
-            
-            if touch.x > 890 and self.out_of_bounds == False:
-                d = 10
-                Ellipse(pos=(890 - d/2, touch.y - d/2), size=(d,d))
-                self.x_delta = (890 - self.x_initial)
-                self.y_delta = (touch.y - self.y_initial)
-                print (self.x_delta)
-                print (self.y_delta)
-                Line(points=[self.x_initial, self.y_initial, 890, touch.y])
                 
-            elif touch.x <= 890 and self.out_of_bounds == False:
+            if touch.x <= 890 and self.out_of_bounds == False:
                 d = 10
                 Ellipse(pos=(touch.x - d/2, touch.y - d/2), size=(d,d))
                 touch.ud['line'] = Line(points=(touch.x, touch.y))
-                self.x_delta = (touch.x - self.x_initial)
-                self.y_delta = (touch.y - self.y_initial)
-                print (self.x_delta)
-                print (self.y_delta)
                 Line(points=[self.x_initial, self.y_initial, touch.x, touch.y])
             
-            elif touch.x > 890 and self.out_of_bounds == True:
-                print('touch up out of bounds')
-                pass
-                
-            elif touch.x <= 890 and self.out_of_bounds == True:
-                pass           
+            else:
+	        print("Touch up out of bounds")
+                pass         
       
 class TestApp(App):
     
