@@ -3,8 +3,6 @@ from kivy.core.window import Window
 from kivy.properties import ObjectProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
-#from kivy.uix.anchorlayout import AnchorLayout
-#from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
 from kivy.uix.label import Label
@@ -16,7 +14,7 @@ import numpy as np
 
 from kivy.config import Config
 Config.set('graphics', 'resizeable', 1) #don't make the app resizeable
-#Graphics fix
+#Graphics fix?
 Window.size = (1280, 800)
 Window.clearcolor = (0, 0, 0, 1.) #fixes drawing issues on some phones
 
@@ -280,6 +278,7 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
         self.rightlayout.add_widget(goButton)
         
         #DRAWING FUNCTIONALITY
+        global drawUtility
         drawUtility = DrawingApp()
         self.leftlayout.add_widget(drawUtility)                                  
         self.layout.add_widget(self.rightlayout)
@@ -291,7 +290,9 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
         
     def userInput(self, *args): #This function to be used when the go button is relased, this will need input data from DrawingApp class
         print('UserInput Function Called')
-        print('x_initial input: %s' %self.x_initial)
+        #print('x_initial input: %s' %self.x_initial)
+        with open('algorithm_input.txt', 'w') as f:
+	        f.write('%f\t%f\t%f\t%f\t%f\t%f' % (drawUtility.x_initial, drawUtility.y_initial, drawUtility.x_final, drawUtility.y_final, drawUtility.x_delta, drawUtility.y_delta))
         
     def changer(self, *args):
         self.manager.current = 'screen1'
@@ -308,8 +309,8 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
         
 class DrawingApp(Widget):
     
-    x_bounds = 890
-    max_vector_length = Window.width*0.2
+    x_bounds = 890 #InteractionScreen.leftlayout.width
+    #max_vector_length = Window.width*0.2
     xlabel = ObjectProperty()
     xlabel2 = ObjectProperty()
     ylabel = ObjectProperty()
@@ -327,7 +328,7 @@ class DrawingApp(Widget):
     def __init__(self, **kwargs):
         super(DrawingApp, self).__init__(**kwargs)
         
-        
+    '''    
     #Vector Length Limiting
     def vector_length(self, x1, y1, x2, y2):
         
@@ -337,22 +338,22 @@ class DrawingApp(Widget):
         if vector_dummy >= self.max_vector_length:
             vector_dummy = self.max_vector_length
             print('vector is normalized, returns true')
-            '''
-            normalizes magnitude but unable to impose limits on x and y when returning function...
-            '''
+            
+            #normalizes magnitude but unable to impose limits on x and y when returning function...
+            
             return True            
-        
+    '''    
     
     #User Touch Events
     def on_touch_down(self, touch):
         with self.canvas:
-            self.canvas.clear()
             if touch.x > self.x_bounds:
                 self.out_of_bounds = True
                 print ('Touch down event out of bounds with x > %s \n' %(self.x_bounds))
                 pass	        
 	        
             elif touch.x < self.x_bounds:
+                self.canvas.clear()
                 d = 10
                 Ellipse(pos=(touch.x - d/2, touch.y - d/2), size=(d,d))
                 touch.ud['line'] = Line(points=(touch.x, touch.y))
@@ -365,19 +366,20 @@ class DrawingApp(Widget):
                 
     def on_touch_move(self, touch):
         with self.canvas:
-            self.canvas.clear()
             
             if touch.x <= self.x_bounds and self.out_of_bounds == False:
+                self.canvas.clear()
                 d = 10
                 Ellipse(pos=(touch.x - d/2, touch.y - d/2), size=(d,d))
                 touch.ud['line'] = Line(points=(touch.x, touch.y))
                 self.x_final = touch.x
                 self.y_final = touch.y
                 print ('ON_MOVE -- This is the final x value: %s, \nThis is the final y value: %s \n\n' %(self.x_final, self.y_final))
-                if self.vector_length(self.x_initial, self.y_initial, touch.x, touch.y) == True:
-                    Line(points=[self.x_initial, self.y_initial, touch.x, touch.y])
+                #if self.vector_length(self.x_initial, self.y_initial, touch.x, touch.y) == True:
+                Line(points=[self.x_initial, self.y_initial, touch.x, touch.y])
                                 
             elif touch.x > self.x_bounds and self.out_of_bounds == False:
+                self.canvas.clear()
                 d = 10
                 Ellipse(pos=(self.x_bounds - d/2, touch.y - d/2), size = (d,d))
                 touch.ud['line'] = Line(points=(touch.x, touch.y))
@@ -386,10 +388,9 @@ class DrawingApp(Widget):
                 print ('ON_MOVE elif1 This is the final x value: %s \n This is the final y value: %s, \n\n' %(self.x_final, self.y_final))
                 Line(points=[self.x_initial, self.y_initial, self.x_bounds, touch.y])
                 
-            elif touch.x > self.x_bounds and self.out_of_bounds == True:
-                print ('Touch move out of bounds on_move function elif2')
-
-                pass
+            #elif touch.x > self.x_bounds and self.out_of_bounds == True:
+                #print ('Touch move out of bounds on_move function elif2')
+                #pass
                 
             elif touch.x <= self.x_bounds and self.out_of_bounds == True:
                 print ('Touch move out of bounds on move function elif3')
@@ -397,7 +398,6 @@ class DrawingApp(Widget):
                 
     def on_touch_up(self, touch):
         with self.canvas:
-            #self.canvas.clear()
             
             if touch.x > self.x_bounds and self.out_of_bounds == False:
                 d = 10
@@ -413,7 +413,7 @@ class DrawingApp(Widget):
                 touch.ud['line'] = Line(points=(touch.x, touch.y))
                 self.x_delta = (touch.x- self.x_initial)
                 self.y_delta = (touch.y- self.y_initial)
-                print ('TOUCH_UP elif1 This is the deltaX value: %s, \n This is the deltaY value: %s, \n\n' %(self.x_delta, self.y_delta))#
+                print ('TOUCH_UP elif1 This is the deltaX value: %s, \n This is the deltaY value: %s, \n\n' %(np.abs(self.x_delta), np.abs(self.y_delta)))#
                 Line(points=[self.x_initial, self.y_initial, touch.x, touch.y])
             
             elif touch.x > self.x_bounds and self.out_of_bounds == True:
