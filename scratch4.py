@@ -10,6 +10,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.slider import Slider
 from kivy.graphics import Color, Rectangle, Ellipse, Line
 
+import os.path
 import numpy as np
 
 from kivy.config import Config
@@ -291,7 +292,11 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
     def userInput(self, *args): #This function to be used when the go button is relased, this will need input data from DrawingApp class
         print('UserInput Function Called')
         #print('x_initial input: %s' %self.x_initial)
-        with open('algorithm_input.txt', 'w') as f:
+        save_path = 'C://Users/Mason/Desktop/Sandbox Kivy/' #SAVE PATH OF ALGORITHM_INPUT.TXT
+        name_of_file = 'algorithm_input'                    #USER INPUT FILENAME
+        inputFileName = os.path.join(save_path, name_of_file+'.txt') #TOTAL PATH NAME
+        
+        with open(inputFileName, 'w') as f:
 	        f.write('%f\t%f\t%f\t%f\t%f\t%f' % (drawUtility.x_initial, drawUtility.y_initial, drawUtility.x_final, drawUtility.y_final, drawUtility.x_delta, drawUtility.y_delta))
         
     def changer(self, *args):
