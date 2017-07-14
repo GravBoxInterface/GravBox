@@ -1,4 +1,5 @@
 from kivy.app import App
+from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.properties import ObjectProperty, NumericProperty
 from kivy.uix.widget import Widget
@@ -9,13 +10,16 @@ from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.slider import Slider
 from kivy.graphics import Color, Rectangle, Ellipse, Line
+from random import randint
 
 import os.path
 import numpy as np
 
 from kivy.config import Config
-Config.set('graphics', 'resizeable', 1) #don't make the app resizeable
-#Graphics fix?
+Config.set('graphics', 'resizeable', 1)  #makes the window resizeable if 1, static if 0
+#Config.set('graphics', 'fullscreen', 1)
+#Config.set('graphics', 'width', '1280')
+#Config.set('graphics', 'height', '900')
 Window.size = (1280, 800)
 Window.clearcolor = (0, 0, 0, 1.) #fixes drawing issues on some phones
 
@@ -32,6 +36,8 @@ class WelcomeScreen(Screen):
     
     buttonList = ['START YOUR JOURNEY', 'ABOUT', 'UIOWA', 'BACK'] #list of buttons, used for naming 
     
+    welcomeImage = 'C://Users/Mason/Desktop/Sandbox Kivy/Gravity-Sandbox-homescreen.jpg' #WELCOME SCREEN BACKGROUND IMAGE PATH
+    
     def __init__(self, **kwargs):
         super(WelcomeScreen, self).__init__(**kwargs)
         
@@ -42,7 +48,7 @@ class WelcomeScreen(Screen):
         self.layout.y = Window.height/2 - self.layout.height/2 #sets the y position of the layout to 0
         self.add_widget(self.layout) #adds the layout to the screen
         
-        self.img = Image(source = 'C://Users/Mason/Desktop/Sandbox Kivy/Gravity-Sandbox-homescreen.jpg') #BACKGROUND IMAGE
+        self.img = Image(source = self.welcomeImage)
         self.img.size = (Window.width*1.0, Window.height*1.2)
         self.img.pos = (-Window.width*0.0, -Window.height*0.0)
         self.img.opacity = 1.0 #alpha value between 0.0 - 1.0
@@ -90,6 +96,8 @@ class WelcomeScreen(Screen):
     
 class AboutScreen(Screen):
     
+    aboutImage = 'C://Users/Mason/Desktop/Sandbox Kivy/gray_star.png' #ABOUT SCREEN BACKGROUND IMAGE 
+    
     def __init__(self, **kwargs):
         super(AboutScreen, self).__init__(**kwargs)
         
@@ -100,7 +108,7 @@ class AboutScreen(Screen):
         self.layout.y = Window.height/2 - self.layout.height/2
         self.add_widget(self.layout)
         
-        self.img = Image(source = 'C://Users/Mason/Desktop/Sandbox Kivy/gray_star.png')
+        self.img = Image(source = self.aboutImage)
         self.img.size = (Window.width*1.0, Window.height*1.0)
         self.img.pos = (-Window.width*0.0, -Window.height*0.0)
         self.img.opacity = 0.4
@@ -124,6 +132,8 @@ class AboutScreen(Screen):
         
 class UiowaScreen(Screen):
     
+    uiowaImage  = 'C://Users/Mason/Desktop/Sandbox Kivy/gold_star.png' #UIOWA SCREEN BACKGROUND IMAGE
+    
     def __init__(self, **kwargs):
         super(UiowaScreen, self).__init__(**kwargs)
         
@@ -134,7 +144,7 @@ class UiowaScreen(Screen):
         self.layout.y = Window.height/2 - self.layout.height/2
         self.add_widget(self.layout)
         
-        self.img = Image(source = 'C://Users/Mason/Desktop/Sandbox Kivy/gold_star.png')
+        self.img = Image(source = self.uiowaImage)
         self.img.size = (Window.width*1.0, Window.height*1.0)
         self.img.pos = (-Window.width*0.0, -Window.height*0.0)
         self.img.opacity = 0.4
@@ -156,7 +166,7 @@ class UiowaScreen(Screen):
         
         
         
-class InteractionScreen(Screen): #This is the main screen for drawing and user input. Next steps include nesting layouts and adding/binding buttons
+class InteractionScreen(Screen): #This is the main screen for drawing and user input. Next steps - adding/binding buttons
     
     x_initial = NumericProperty(0)
     y_initial = NumericProperty(0)
@@ -165,6 +175,7 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
     x_delta = NumericProperty(0)
     y_delta = NumericProperty(0)
     angle = NumericProperty(0)
+
     
     
     def __init__(self, **kwargs):
@@ -188,10 +199,9 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
         self.leftlayout.x = 0 #Window.width - self.leftlayout.width
         self.leftlayout.y = 0 #Window.width/2 - self.leftlayout.height/2
         
-        #self.bind(x_initial = DrawingApp.setter(DrawingApp.x_initial)) #attempt to bind numericproperties b/w classes
-            #trying to bind the x_initial variable to the drawingapp variable called x_initial
+
         
-       
+              
         with self.canvas: #sets canvas instructions for the float layout and draws a red rectangle filling the entire layout
             Color(1., 0, 0, .4) #RED
             Rectangle(pos=(self.layout.x, self.y), size=(self.layout.width, self.layout.height))
@@ -200,7 +210,7 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
             Color(0, 0, 1., .3) #BLUE
             Rectangle(pos=(self.rightlayout.x, self.rightlayout.y), size=(self.rightlayout.width, self.rightlayout.height))
             
-        with self.leftlayout.canvas:
+        with self.leftlayout.canvas: #sets canvas instruction for the leftlayout and draws a green rectangle filling the entire layout
             Color(0, 1., 0, .2) #GREEN
             Rectangle(pos=(self.leftlayout.x, self.leftlayout.y), size=(self.leftlayout.width, self.leftlayout.height))
         
@@ -220,6 +230,9 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
         objButton.background_color = [.4, .4, .4, 1]
         objButton.bind(on_release = self.massSelect)
         self.rightlayout.add_widget(objButton)
+        
+        #TOPOGRAPHY TOGGLE SWITCH
+        
         
         #SPEED LABEL
         self.spdLabel = Label(text='Speed: 50')
@@ -281,10 +294,26 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
         #DRAWING FUNCTIONALITY
         global drawUtility
         drawUtility = DrawingApp()
-        self.leftlayout.add_widget(drawUtility)                                  
+        self.leftlayout.add_widget(drawUtility)                                 
         self.layout.add_widget(self.rightlayout)
         self.layout.add_widget(self.leftlayout)
         self.add_widget(self.layout)
+        
+        #DEFAULT BACKGROUND IMAGE
+        self.bg_image_default = Image(source='C://Users/Mason/Downloads/starfield.jpg')
+        self.bg_image_default.allow_stretch = True
+        self.bg_image_default.keep_ratio = False
+        self.bg_image_default.size_hint_x = .7
+        self.bg_image_default.size_hint_y = 1
+        self.bg_image_default.pos = (0, 0)
+        self.bg_image_default.opacity = 0.4
+        self.leftlayout.add_widget(self.bg_image_default) #ADDS DEFAULT BACKGROUND IMAGE
+        
+        
+        #BACKGROUND IMAGE UPDATE FUNCTION
+        #if self.manager.current == 'screen2':
+        Clock.schedule_interval(self.imageUpdate, 1.0/5.0) #seconds per update
+                
         
     def massSelect(self, *args):
         print('Mass Selector Function called')
@@ -311,11 +340,35 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
     def spdSliderChange(self, instance, value):
         self.spdLabel.text = 'Speed: ' +str(value)
         
+    def imageUpdate(self, dt):
+        
+        #TESTING MULTIPLE IMAGE UPDATE
+        try:
+            self.leftlayout.remove_widget(self.bg_image_default)
+            self.leftlayout.remove_widget(self.bg_image)
+        except:
+            pass
+            
+        imageNumber = randint(1,4)
+        imageStr = 'C://Users/Mason/Desktop/Sandbox Kivy/sandstone_'+str(imageNumber)+'.png'
+        self.bg_image = Image(source=imageStr)
+        self.bg_image.allow_stretch = True
+        self.bg_image.keep_ratio = False
+        self.bg_image.size_hint_x = .7
+        self.bg_image.size_hint_y = 1
+        self.bg_image.pos = (0, 0)
+        self.bg_image.opacity = 0.6
+        
+        self.leftlayout.add_widget(self.bg_image)
+        
+        print('The background image has updated')
+
+        
+        
         
 class DrawingApp(Widget):
     
     x_bounds = 890 #InteractionScreen.leftlayout.width
-    #max_vector_length = Window.width*0.2
     xlabel = ObjectProperty()
     xlabel2 = ObjectProperty()
     ylabel = ObjectProperty()
@@ -328,7 +381,7 @@ class DrawingApp(Widget):
     y_delta = NumericProperty(0)
     angle = NumericProperty(0)
     out_of_bounds = None
-    #SOMETHING HERE TO REFERENCE INTERACTION SCREEN!?
+    #SOMETHING HERE TO REFERENCE INTERACTION SCREEN?
     
     def __init__(self, **kwargs):
         super(DrawingApp, self).__init__(**kwargs)
@@ -351,7 +404,9 @@ class DrawingApp(Widget):
     
     #User Touch Events
     def on_touch_down(self, touch):
+        
         with self.canvas:
+            
             if touch.x > self.x_bounds:
                 self.out_of_bounds = True
                 print ('Touch down event out of bounds with x > %s \n' %(self.x_bounds))
@@ -370,6 +425,7 @@ class DrawingApp(Widget):
 
                 
     def on_touch_move(self, touch):
+        
         with self.canvas:
             
             if touch.x <= self.x_bounds and self.out_of_bounds == False:
@@ -402,6 +458,7 @@ class DrawingApp(Widget):
                 pass
                 
     def on_touch_up(self, touch):
+        
         with self.canvas:
             
             if touch.x > self.x_bounds and self.out_of_bounds == False:
@@ -443,6 +500,7 @@ class TestApp(App):
         sm.add_widget(sc2)
         sm.add_widget(sc3)
         sm.add_widget(sc4)
+        #Clock.schedule_interval(sc2.imageUpdate, 1.0/60.0)
         print (sm.screen_names)
         return sm
         
