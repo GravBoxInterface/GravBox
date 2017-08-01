@@ -37,16 +37,18 @@ class MyButton(Button):
         super(MyButton, self).__init__(**kwargs)
         self.font_size = Window.width*0.015 #setting font size
 
+        
 class Particle(Widget):
     
-    def __init__(self, pos, **kwargs):
-        super(Particle, self).__init__(**kwargs)
-        self.size = (10, 10)
-        #self.opacity = 1
-        self.pos = pos
+    def __init__(self, pos, size):
+        super(Particle, self).__init__(pos=pos, size=size)
         with self.canvas:
-            Color(1, 1, 1)
-            Ellipse(pos=(pos[0], pos[1]), size=(10, 10))
+            Color(1,1,1)
+            self.ellipse = Ellipse(pos=pos, size=size)
+        self.bind(pos = self.updatePosition)
+        
+    def updatePosition(self, *args):
+        self.ellipse.pos = self.pos    
 
 
 class WelcomeScreen(Screen):
@@ -335,23 +337,33 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
         inputFileName = os.path.join(assetsdirectory, name_of_file+'.txt') #TOTAL PATH NAME
         
         with open(inputFileName, 'w') as f:
-	        f.write('%f\t%f\t%f\t%f\t%f\t%f' % (drawUtility.x_initial, drawUtility.y_initial, drawUtility.x_final, drawUtility.y_final))#, drawUtility.x_delta, drawUtility.y_delta))
+	    f.write('%f\t%f\t%f\t%f\t%f\t%f' % (drawUtility.x_initial, drawUtility.y_initial, drawUtility.x_final, drawUtility.y_final))#, drawUtility.x_delta, drawUtility.y_delta))
         
         drawUtility.canvas.clear()
         particle = Particle([drawUtility.x_initial, drawUtility.y_initial])
         drawUtility.add_widget(particle)
         
-        while os.path.isfile('algorithm_output.csv') == False:
-            sleep(2)
-            print ('Still not here?')
-        else:
-            print ('its here')
-            x, y = np.loadtxt('algorithm_output.csv', delimiter=',', usecols=(2,3), unpack=True)
-            animation = Animation(pos=(int(round(x[0])), int(round(y[0]))), t='linear', duration=.05)
-            for i in np.arange(0, len(x)):
-                animation += Animation(pos=(int(round(x[i])), int(round(y[i]))), t='linear', duration=.05)
-            animation.start(particle)
+	while os.path.isfile('algorithm_output.npy') == False:
+            sleep(1)
+	        print "Still no file"
+	else:
+	    print "File found!"
+
+	    x,y = np.load('algorithm_output.npy') = np.load('mylistx.npy'); 
+	    xs = np.split(x, len(x)/200, 0); ys = np.split(y, len(y)/200, 0)
+
+            self.animate(xs, ys, 0, particle)
+            
+    def animate(self, x_coords, y_coords, index, instance):
         
+        if index < len(x_coords):
+            
+            animation = Animation(pos=(int(x_coords[index][0]), int(y_coords[index][0])), t='linear', duration=.02)
+            
+            for i in np.arange(0, len(x_coords[index])):
+                animation += Animation(pos=(int(x_coords[index][i]), int(y_coords[index][i])), t='linear', duration=.02)
+                
+            animation.bind(on_complete=lambda x, y: (self.animate(x_coords, y_coords, index+1, instance)))        
         
     def changer(self, *args):
         self.manager.current = 'screen1'
