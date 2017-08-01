@@ -349,7 +349,7 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
 	else:
 	    print "File found!"
 
-	    x,y = np.load('algorithm_output.npy') = np.load('mylistx.npy'); 
+	    x,y = np.load('algorithm_output.npy')
 	    xs = np.split(x, len(x)/200, 0); ys = np.split(y, len(y)/200, 0)
 
             self.animate(xs, ys, 0, particle)
