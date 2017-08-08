@@ -2,8 +2,6 @@ from kivy.config import Config
 Config.set('graphics', 'resizeable', 0) #don't make the app resizeable
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand') # remove multitouch (red circle on right click, now both clicks draw vectors)
 Config.set('graphics', 'position', 'custom')
-Config.set('graphics', 'top', '-100') ### This doesn't seem to do anything
-Config.set('graphics', 'left', '-100')
 
 from kivy.app import App
 from kivy.animation import Animation
@@ -34,7 +32,7 @@ import numpy as np
 
 
 #Graphics fix
-Window.size = (1920, 1200)
+Window.size = (960, 600)
 Window.clearcolor = (0, 0, 0, 1.) #fixes drawing issues on some phones
 
 assetsdirectory = r'C://Users/Erin/Desktop/GravBox-master/' #CURRENT FILEPATH FOR ALL IMAGES/ASSETS
