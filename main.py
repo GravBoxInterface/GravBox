@@ -25,8 +25,8 @@ import numpy as np
 
 # Configuration values
 #Graphics fix
-Window.size = (1920, 1200)
-#Window.fullscreen = True
+#Window.size = (1920, 1200)
+Window.fullscreen = True
 Window.clearcolor = (0, 0, 0, 1.) #fixes drawing issues on some phones
 
 #CURRENT FILEPATH FOR ALL IMAGES/ASSETS -- Comment the ones you don't need
@@ -88,7 +88,7 @@ class WelcomeScreen(Screen):
         startBtn = MyButton(text = '') #start button
         startBtn.size_hint = (.21, .09)
         startBtn.pos_hint ={'x': .395, 'y': .24}
-        startBtn.background_color = [.4, .4, .4, .4] #backgroundcolor of the button (this is grayish)
+        startBtn.background_color = [.306, .325, .4196, .4] #backgroundcolor of the button (this is grayish)
         startBtn.bind(on_release = self.changer) #when the button is released the changer function is called
         self.add_widget(startBtn) #adds the button called startButton to the floatlayout
 
@@ -145,7 +145,7 @@ class AboutScreen(Screen):
         backBtn = MyButton(text = 'BACK') # back button
         backBtn.size_hint = (.1, .1)
         backBtn.pos_hint ={'x': 0, 'y': .90}
-        backBtn.background_color = [.4, .4, .4, 1]
+        backBtn.background_color = [.306, .325, .4196, 1]
         backBtn.bind(on_release = self.backButton) #when the button is released the callback function is called
         self.add_widget(backBtn)
         
@@ -214,7 +214,7 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
         self.leftlayout.y = 0 #Window.width/2 - self.centerlayout.height/2         
             
         with self.rightlayout.canvas: #sets canvas instructions for the rightlayout and draws a blue rect. filling the entire layout
-            Color(0, 0, .5, 1) #BLUE
+            Color (.125,.184,.31,1) #BLUE
             Rectangle(pos=(self.rightlayout.x, self.rightlayout.y), size=(self.rightlayout.width, self.rightlayout.height))    
 
         ### LEFT LAYOUT CONTENT 
@@ -241,64 +241,86 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
         self.imageNumber = 1    #default image number 
         self.event = Clock.schedule_interval(self.imageUpdate, 1.0/5.0) #SCHEDULES THE IMAGE UPDATING TO OCCUR
         
-        # HOME BUTTON AND IMAGE
-        homeBtn = Button(text='', size_hint=((1./24.), (.06)), pos_hint={'x':0, 'y':.94}, opacity=.5) #back button to the interaction screen
-        homeBtn.bind(on_press=self.changer) #binds this button to change the screen back to the welcome screen
-        self.layout.add_widget(homeBtn, 0) #adds the button to the float layout
-        
-        self.homeImage = Image(source=assetsdirectory+str('home.png')) # adds slightly transparent home icon over the back button 
-        self.homeImage.size_hint = ((1./24.), .06)
-        self.homeImage.pos_hint = {'x': 0, 'y': .94}
-        self.homeImage.opacity = .5
-        self.layout.add_widget(self.homeImage)
         
         ### RIGHT LAYOUT CONTENT
+        #(Must be in same order for correct layout)
                 
-        # OBJECT BUTTON (Must be in same order for correct layout)       
-        objButton = Spinner(text='PLEASE SELECT\nAN OBJECT', halign='center', values=('Particle', 'Planet', 'Comet', 'Star', 'Black Hole', 'Elephant')) # object spinner
-        objButton.pos_hint = {'x':0, 'y': .8}
-        objButton.size_hint = ((1./6.), .2)
-        objButton.background_color = [.4, .4, .4, 1]
-        self.rightlayout.add_widget(objButton, 0)
+        # HOME BUTTON        
+        homeButton = Button(text='HOME', font_name='Impact', font_size='25sp')
+        homeButton.pos_hint = {'x':0, 'y': .8}
+        homeButton.color = [.937,.804,.769,1]
+        homeButton.size_hint = ((1./6.), .2)
+        homeButton.background_color = [.353, .396, .522, 1]
+        homeButton.bind(on_press=self.changer)
+        self.rightlayout.add_widget(homeButton, 0)
+        
+        # HOME BUTTON AND IMAGE
+        #homeBtn = Button(text='', size_hint=((1./24.), (.06)), pos_hint={'x':0, 'y':.94}, opacity=.5) #back button to the interaction screen
+        #homeBtn.bind(on_press=self.changer) #binds this button to change the screen back to the welcome screen
+        #self.rightlayout.add_widget(homeBtn, 0) #adds the button to the float layout
+        
+        #self.homeImage = Image(source=assetsdirectory+str('home.png')) # adds slightly transparent home icon over the back button 
+        #self.homeImage.size_hint = ((1./24.), .06)
+        #self.homeImage.pos_hint = {'x': 0, 'y': .94}
+        #self.homeImage.opacity = .5
+        #self.rightlayout.add_widget(self.homeImage)
+        
+        # TOPOGRAPHY LABEL
+        self.topoLabel = Label(text='TOPOGRAPHY', halign='center')
+        self.topoLabel.pos_hint = {'x': 0, 'y': .65}
+        self.topoLabel.color = [.937,.804,.769,1]
+        self.topoLabel.font_name = 'Impact'
+        self.topoLabel.font_size = '20sp'
+        self.topoLabel.size_hint = ((.1/.6), .2)
+        self.topoLabel.background_color = [.353, .396, .522, 1]
+        self.rightlayout.add_widget(self.topoLabel)
         
         # TOPOGRAPHY TOGGLE SWITCH
         self.topoSwitch = Switch(active = True) # switch to toggle between updating topography and static star field
         self.topoSwitch.pos_hint = {'x': 0, 'y':.6}
         self.topoSwitch.size_hint = ((1./6.),.15)
-        self.topoSwitch.background_color = [.4, .4, .4, 1]
+        self.topoSwitch.background_color = [.125,.184,.31,1]
         self.rightlayout.add_widget(self.topoSwitch)
         
         self.topoSwitch.bind(active = self.topoChange) # bind switch to topoChange function
         
         # SPEED LABEL
-        self.spdLabel = Label(text= 'Speed:\n' + str(drawUtility.speed), halign='center') # label showing current speed
+        self.spdLabel = Label(text= 'SPEED:\n' + str(drawUtility.speed), halign='center') # label showing current speed
         self.spdLabel.pos_hint = {'x': 0, 'y': .4}
-        self.spdLabel.size_hint = ((.1/.6), .2)
+        self.spdLabel.font_name = 'Impact'
+        self.spdLabel.font_size = '20sp'
+        self.spdLabel.color = [.937,.804,.769,1]
+        self.spdLabel.size_hint = ((1./6.), .2)
         self.spdLabel.background_color = [.4, .4, .4, 1]
         self.rightlayout.add_widget(self.spdLabel)
         
         def update_speed(value, instance): # callback function to bind speed to vector
-            self.spdLabel.text = 'Speed:\n' + str(drawUtility.speed)
+            self.spdLabel.text = 'SPEED:\n' + str(drawUtility.speed)
             
         drawUtility.bind(speed = update_speed) # bind speed to vector length    
         
         # ANGLE LABEL
-        self.angLabel = Label(text='Angle:\n' + str(drawUtility.angle), halign='center') # label showing current angle
+        self.angLabel = Label(text='ANGLE:\n' + str(drawUtility.angle), halign='center') # label showing current angle
         self.angLabel.pos_hint = {'x': 0, 'y':.2}
+        self.angLabel.font_name = 'Impact'
+        self.angLabel.font_size = '20sp'
         self.angLabel.size_hint = ((1./6.), .2)
+        self.angLabel.color = [.937,.804,.769,1]
         self.angLabel.background_color = [.4, .4, .4, 1]
         self.rightlayout.add_widget(self.angLabel)
         
         def update_angle(value, instance): # callback function to bind angle to vector
-            self.angLabel.text = 'Angle:\n' + str(drawUtility.angle)
+            self.angLabel.text = 'ANGLE:\n' + str(drawUtility.angle)
             
         drawUtility.bind(angle = update_angle)  # bind angle to vector                
                         
-        # GO BUTTON
-        self.goButton = MyButton(text = 'Go!') # go button to send user input to algorithm
+        # GO! BUTTON
+        self.goButton = MyButton(text = 'Go!', font_name='Impact') # go button to send user input to algorithm
         self.goButton.pos_hint = {'x':0, 'y':0}
+        self.goButton.font_size = '30sp'
         self.goButton.size_hint = ((1./6.), .2)
-        self.goButton.background_color = [.4, .4, .4, 1]
+        self.goButton.color = [.937,.804,.769,1]
+        self.goButton.background_color = [.353, .396, .522, 1]
         self.goButton.bind(on_release = self.userInput) # when the button is released the USERINPUT function is called
         self.rightlayout.add_widget(self.goButton) 
         
