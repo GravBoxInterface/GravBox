@@ -366,7 +366,7 @@ class InteractionScreen(Screen): #This is the main screen for drawing and user i
             pass
             
         self.imageNumber ^= 1
-        imageStr = assetsdirectory+str('app_test_')+str(self.imageNumber)+'.jpg' # randomly choose sandstone image
+        imageStr = assetsdirectory+str('color_field_')+str(self.imageNumber)+'.jpg' # randomly choose sandstone image
         #print('imageNumber: %s' % self.imageNumber)
         
         self.bg_image = Image(source=imageStr)
