@@ -1,50 +1,5 @@
-# GravBox
-#
-# RESOURCES FOR USING GRAVBOX
-# 
-# KIVY
-#
-# 
+### GravBox
+## RESOURCES FOR USING GRAVBOX
+# KIVY 
 # BUILDOZER
-#
-#
 # PYTHON
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
