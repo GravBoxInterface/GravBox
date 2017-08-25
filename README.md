@@ -11,11 +11,21 @@ A tablet is used for interaction and input on the AR Sandbox device. The tablet 
 
 ### KIVY
 
-
+KIVY is a Python module used for making Android apps. It requires the user to download and install, ensuring that the user's method of programming in Python can import it. The module itself is made up of a vast collection of tools, properties and object-oriented programming to create applications. Countless examples of source code and answered questions are available online, so it's up to the user to discover all of the utilities. In general, it's very simple to import various modules the user requires in order to create an app. All a user needs to do to test the functionality is run the python file, and as long as everything is installed properly, an emulation window should open displaying the app.
+https://kivy.org/#home
 
 ### BUILDOZER
 
+When an app is ready to be turned into an .apk file, the only real method to go about doing it is to use Buildozer. Buildozer is used to create application packages, which are then downloaded and installed on a device. Buildozer can be installed on a Linux machine. To install Buildozer, follow the steps here: https://github.com/kivy/buildozer . Once it is properly installed, a user must do the following:
 
+type 'buildozer init', press enter, this will create a file called buildozer.spec
+Use the built-in vim text editor (or another text editor) and make these changes to the buildozer.spec file:
+
+type 'buildozer android debug', press enter, this generates the .apk file that can then be transferred over to an Android device and installed.
+
+### KIVY LAUNCHER
+
+If the app requires debugging, as most do, then using kivy launcher is the way to go. Simply install the Kivy Launcher app from the app store onto your device. To run apps, it requires the .py file for the app and any required images or .gifs to be placed in the root folder. Once they are in, open the Kivy Launcher app and the created application should appear on its screen. 
 
 ### PYTHON
 
