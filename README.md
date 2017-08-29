@@ -29,7 +29,7 @@ If the app requires debugging, as most do, then using kivy launcher is the way t
 
 ### PYTHON
 
-
+We use version 2.7 of Python for the app. Any further changes to the code need to be written in Python 2.7. Buildozer supports both Python 2.7 and 3.5, but as long as the version setting in the buildozer.spec file is set to 3.5, the code will compile into a .apk file correctly.
 
 ### GRAVITY ALGORITHM
 https://github.com/jwisbell/gravity_sandbox
